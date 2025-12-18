@@ -1,0 +1,46 @@
+{
+  "name": "Luminous Mysteries",
+  "type": "luminous",
+  "mysteries": [
+    {
+      "number": 1,
+      "title": "The Baptism in the Jordan",
+      "scripture": "After Jesus was baptized, he came up from the water and behold, the heavens were opened for him, and he saw the Spirit of God descending like a dove and coming upon him. And a voice came from the heavens, saying, 'This is my beloved Son, with whom I am well pleased.'",
+      "reference": "Matthew 3:16-17",
+      "fruit": "Openness to the Holy Spirit",
+      "imageKey": "baptism"
+    },
+    {
+      "number": 2,
+      "title": "The Wedding at Cana",
+      "scripture": "On the third day there was a wedding in Cana in Galilee, and the mother of Jesus was there. Jesus and his disciples were also invited to the wedding. When the wine ran short, the mother of Jesus said to him, 'They have no wine.' His mother said to the servers, 'Do whatever he tells you.' Jesus did this as the beginning of his signs in Cana in Galilee and so revealed his glory, and his disciples began to believe in him.",
+      "reference": "John 2:1-3, 5, 11",
+      "fruit": "To Jesus Through Mary",
+      "imageKey": "cana"
+    },
+    {
+      "number": 3,
+      "title": "The Proclamation of the Kingdom",
+      "scripture": "After John had been arrested, Jesus came to Galilee proclaiming the gospel of God: 'This is the time of fulfillment. The kingdom of God is at hand. Repent, and believe in the gospel.' Jesus said to them, 'Come after me, and I will make you fishers of men.'",
+      "reference": "Mark 1:14-15, 17",
+      "fruit": "Repentance, Trust in God",
+      "imageKey": "proclamation"
+    },
+    {
+      "number": 4,
+      "title": "The Transfiguration",
+      "scripture": "Jesus took Peter, James, and John his brother, and led them up a high mountain by themselves. And he was transfigured before them; his face shone like the sun and his clothes became white as light. And behold, Moses and Elijah appeared to them, conversing with him.",
+      "reference": "Matthew 17:1-3",
+      "fruit": "Desire for Holiness",
+      "imageKey": "transfiguration"
+    },
+    {
+      "number": 5,
+      "title": "The Institution of the Eucharist",
+      "scripture": "While they were eating, Jesus took bread, said the blessing, broke it, and giving it to his disciples said, 'Take and eat; this is my body.' Then he took a cup, gave thanks, and gave it to them, saying, 'Drink from it, all of you, for this is my blood of the covenant, which will be shed on behalf of many for the forgiveness of sins.'",
+      "reference": "Matthew 26:26-28",
+      "fruit": "Adoration of the Eucharist, Active Participation in Mass",
+      "imageKey": "eucharist"
+    }
+  ]
+}

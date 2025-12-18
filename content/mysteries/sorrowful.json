@@ -1,0 +1,46 @@
+{
+  "name": "Sorrowful Mysteries",
+  "type": "sorrowful",
+  "mysteries": [
+    {
+      "number": 1,
+      "title": "The Agony in the Garden",
+      "scripture": "Then Jesus came with them to a place called Gethsemane, and he said to his disciples, 'Sit here while I go over there and pray.' He advanced a little and fell prostrate in prayer, saying, 'My Father, if it is possible, let this cup pass from me; yet, not as I will, but as you will.'",
+      "reference": "Matthew 26:36, 39",
+      "fruit": "Sorrow for Sin, Conformity to the Will of God",
+      "imageKey": "agony"
+    },
+    {
+      "number": 2,
+      "title": "The Scourging at the Pillar",
+      "scripture": "Then Pilate took Jesus and had him scourged. He was spurned and avoided by men, a man of suffering, knowing pain, like one from whom you turn your face, spurned, and we held him in no esteem.",
+      "reference": "John 19:1, Isaiah 53:3",
+      "fruit": "Purity, Mortification",
+      "imageKey": "scourging"
+    },
+    {
+      "number": 3,
+      "title": "The Crowning with Thorns",
+      "scripture": "Weaving a crown out of thorns, they placed it on his head, and a reed in his right hand. And kneeling before him, they mocked him, saying, 'Hail, King of the Jews!' They spat upon him and took the reed and kept striking him on the head.",
+      "reference": "Matthew 27:29-30",
+      "fruit": "Moral Courage",
+      "imageKey": "crowning"
+    },
+    {
+      "number": 4,
+      "title": "The Carrying of the Cross",
+      "scripture": "And carrying the cross himself he went out to what is called the Place of the Skull, in Hebrew, Golgotha. Jesus said to all, 'If anyone wishes to come after me, he must deny himself and take up his cross daily and follow me.'",
+      "reference": "John 19:17, Luke 9:23",
+      "fruit": "Patience in Suffering",
+      "imageKey": "carrying"
+    },
+    {
+      "number": 5,
+      "title": "The Crucifixion",
+      "scripture": "When they came to the place called the Skull, they crucified him and the criminals there, one on his right, the other on his left. Then Jesus said, 'Father, forgive them, they know not what they do.'",
+      "reference": "Luke 23:33-34",
+      "fruit": "Perseverance, Forgiveness",
+      "imageKey": "crucifixion"
+    }
+  ]
+}

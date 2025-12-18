@@ -1,0 +1,94 @@
+{
+  "home": {
+    "title": "Rosary Together",
+    "tagline": "Never pray alone again",
+    "prayingNow": "{{count}} praying now",
+    "readyToPray": "I'm Ready to Pray",
+    "tapToJoin": "tap to join queue",
+    "todaysMysteries": "Today: {{mysteries}} ({{day}})",
+    "waitingNow": "Waiting now:",
+    "people": "people",
+    "prayOffline": "Pray Offline",
+    "language": "Language"
+  },
+  "queue": {
+    "waiting": "Waiting for others...",
+    "youAndOthers": "You + {{count}} others ready",
+    "startingIn": "Starting in: {{time}}",
+    "mysteries": "Mysteries: {{type}}",
+    "language": "Language: {{lang}}",
+    "startNow": "Start Now",
+    "leaveQueue": "Leave Queue"
+  },
+  "prayer": {
+    "mystery": "{{number}} {{type}} Mystery",
+    "prayingWithYou": "{{count}} praying with you",
+    "nextPrayer": "Next Prayer",
+    "beadProgress": "{{current}}/{{total}}",
+    "finish": "Finish"
+  },
+  "completion": {
+    "amen": "Amen",
+    "youPrayed": "You prayed the {{mysteries}}",
+    "withPeople": "with {{count}} people worldwide",
+    "yourStreak": "Your streak: {{count}} days",
+    "totalRosaries": "Total rosaries: {{count}}",
+    "addIntention": "Add an intention (optional):",
+    "shareAnonymously": "Share anonymously",
+    "done": "Done",
+    "prayAgain": "Pray Again"
+  },
+  "mysteries": {
+    "joyful": "Joyful Mysteries",
+    "sorrowful": "Sorrowful Mysteries",
+    "glorious": "Glorious Mysteries",
+    "luminous": "Luminous Mysteries"
+  },
+  "days": {
+    "sunday": "Sunday",
+    "monday": "Monday",
+    "tuesday": "Tuesday",
+    "wednesday": "Wednesday",
+    "thursday": "Thursday",
+    "friday": "Friday",
+    "saturday": "Saturday"
+  },
+  "settings": {
+    "title": "Settings",
+    "displayName": "Display Name",
+    "country": "Country",
+    "language": "Language",
+    "notifications": "Notifications",
+    "showLocation": "Show location to others",
+    "about": "About",
+    "donate": "Support Rosary Together",
+    "signOut": "Sign Out",
+    "account": "Account",
+    "preferences": "Preferences",
+    "guestWarning": "You're using a guest account. Create an account to save your progress.",
+    "save": "Save"
+  },
+  "history": {
+    "title": "History",
+    "currentStreak": "Current Streak",
+    "totalRosaries": "Total Rosaries",
+    "longestStreak": "Longest Streak",
+    "prayerCalendar": "Prayer Calendar",
+    "recentSessions": "Recent Sessions",
+    "noHistory": "No prayers yet. Start your first rosary!",
+    "historyComingSoon": "Your prayer history will appear here"
+  },
+  "offline": {
+    "banner": "You're offline",
+    "prayingOffline": "Praying offline",
+    "pendingSync": "{{count}} prayers pending sync"
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "Something went wrong",
+    "retry": "Retry",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "ok": "OK"
+  }
+}

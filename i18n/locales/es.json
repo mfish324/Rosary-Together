@@ -1,0 +1,94 @@
+{
+  "home": {
+    "title": "Rosario Juntos",
+    "tagline": "Nunca reces solo otra vez",
+    "prayingNow": "{{count}} rezando ahora",
+    "readyToPray": "Estoy Listo para Rezar",
+    "tapToJoin": "toca para unirte a la cola",
+    "todaysMysteries": "Hoy: {{mysteries}} ({{day}})",
+    "waitingNow": "Esperando ahora:",
+    "people": "personas",
+    "prayOffline": "Rezar Sin Conexión",
+    "language": "Idioma"
+  },
+  "queue": {
+    "waiting": "Esperando a otros...",
+    "youAndOthers": "Tú + {{count}} otros listos",
+    "startingIn": "Comenzando en: {{time}}",
+    "mysteries": "Misterios: {{type}}",
+    "language": "Idioma: {{lang}}",
+    "startNow": "Comenzar Ahora",
+    "leaveQueue": "Salir de la Cola"
+  },
+  "prayer": {
+    "mystery": "{{number}}º Misterio {{type}}",
+    "prayingWithYou": "{{count}} rezando contigo",
+    "nextPrayer": "Siguiente Oración",
+    "beadProgress": "{{current}}/{{total}}",
+    "finish": "Terminar"
+  },
+  "completion": {
+    "amen": "Amén",
+    "youPrayed": "Has rezado los {{mysteries}}",
+    "withPeople": "con {{count}} personas en todo el mundo",
+    "yourStreak": "Tu racha: {{count}} días",
+    "totalRosaries": "Total de rosarios: {{count}}",
+    "addIntention": "Añadir una intención (opcional):",
+    "shareAnonymously": "Compartir anónimamente",
+    "done": "Hecho",
+    "prayAgain": "Rezar de Nuevo"
+  },
+  "mysteries": {
+    "joyful": "Misterios Gozosos",
+    "sorrowful": "Misterios Dolorosos",
+    "glorious": "Misterios Gloriosos",
+    "luminous": "Misterios Luminosos"
+  },
+  "days": {
+    "sunday": "Domingo",
+    "monday": "Lunes",
+    "tuesday": "Martes",
+    "wednesday": "Miércoles",
+    "thursday": "Jueves",
+    "friday": "Viernes",
+    "saturday": "Sábado"
+  },
+  "settings": {
+    "title": "Configuración",
+    "displayName": "Nombre para Mostrar",
+    "country": "País",
+    "language": "Idioma",
+    "notifications": "Notificaciones",
+    "showLocation": "Mostrar ubicación a otros",
+    "about": "Acerca de",
+    "donate": "Apoyar Rosario Juntos",
+    "signOut": "Cerrar Sesión",
+    "account": "Cuenta",
+    "preferences": "Preferencias",
+    "guestWarning": "Estás usando una cuenta de invitado. Crea una cuenta para guardar tu progreso.",
+    "save": "Guardar"
+  },
+  "history": {
+    "title": "Historial",
+    "currentStreak": "Racha Actual",
+    "totalRosaries": "Total de Rosarios",
+    "longestStreak": "Racha Más Larga",
+    "prayerCalendar": "Calendario de Oración",
+    "recentSessions": "Sesiones Recientes",
+    "noHistory": "Aún no hay oraciones. ¡Comienza tu primer rosario!",
+    "historyComingSoon": "Tu historial de oración aparecerá aquí"
+  },
+  "offline": {
+    "banner": "Estás sin conexión",
+    "prayingOffline": "Rezando sin conexión",
+    "pendingSync": "{{count}} oraciones pendientes de sincronizar"
+  },
+  "common": {
+    "loading": "Cargando...",
+    "error": "Algo salió mal",
+    "retry": "Reintentar",
+    "cancel": "Cancelar",
+    "confirm": "Confirmar",
+    "ok": "OK"
+  }
+}

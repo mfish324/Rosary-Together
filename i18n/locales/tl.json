@@ -1,0 +1,94 @@
+{
+  "home": {
+    "title": "Rosaryo Kasama",
+    "tagline": "Huwag nang magdasal nang mag-isa",
+    "prayingNow": "{{count}} ang nagdarasal ngayon",
+    "readyToPray": "Handa Na Akong Magdasal",
+    "tapToJoin": "i-tap para sumali sa pila",
+    "todaysMysteries": "Ngayon: {{mysteries}} ({{day}})",
+    "waitingNow": "Naghihintay ngayon:",
+    "people": "tao",
+    "prayOffline": "Magdasal Offline",
+    "language": "Wika"
+  },
+  "queue": {
+    "waiting": "Naghihintay ng iba...",
+    "youAndOthers": "Ikaw + {{count}} iba pang handa",
+    "startingIn": "Magsisimula sa: {{time}}",
+    "mysteries": "Misteryo: {{type}}",
+    "language": "Wika: {{lang}}",
+    "startNow": "Simulan Na",
+    "leaveQueue": "Umalis sa Pila"
+  },
+  "prayer": {
+    "mystery": "Ika-{{number}} Misteryo ng {{type}}",
+    "prayingWithYou": "{{count}} ang nagdarasal kasama mo",
+    "nextPrayer": "Susunod na Panalangin",
+    "beadProgress": "{{current}}/{{total}}",
+    "finish": "Tapusin"
+  },
+  "completion": {
+    "amen": "Amen",
+    "youPrayed": "Natapos mo ang {{mysteries}}",
+    "withPeople": "kasama ang {{count}} tao sa buong mundo",
+    "yourStreak": "Iyong streak: {{count}} araw",
+    "totalRosaries": "Kabuuang rosaryo: {{count}}",
+    "addIntention": "Magdagdag ng intensyon (opsyonal):",
+    "shareAnonymously": "Ibahagi nang hindi kilala",
+    "done": "Tapos",
+    "prayAgain": "Magdasal Muli"
+  },
+  "mysteries": {
+    "joyful": "Mga Misteryo ng Tuwa",
+    "sorrowful": "Mga Misteryo ng Hapis",
+    "glorious": "Mga Misteryo ng Luwalhati",
+    "luminous": "Mga Misteryo ng Liwanag"
+  },
+  "days": {
+    "sunday": "Linggo",
+    "monday": "Lunes",
+    "tuesday": "Martes",
+    "wednesday": "Miyerkules",
+    "thursday": "Huwebes",
+    "friday": "Biyernes",
+    "saturday": "Sabado"
+  },
+  "settings": {
+    "title": "Mga Setting",
+    "displayName": "Pangalan na Ipapakita",
+    "country": "Bansa",
+    "language": "Wika",
+    "notifications": "Mga Abiso",
+    "showLocation": "Ipakita ang lokasyon sa iba",
+    "about": "Tungkol sa",
+    "donate": "Suportahan ang Rosaryo Kasama",
+    "signOut": "Mag-sign Out",
+    "account": "Account",
+    "preferences": "Mga Kagustuhan",
+    "guestWarning": "Gumagamit ka ng guest account. Gumawa ng account para i-save ang iyong progreso.",
+    "save": "I-save"
+  },
+  "history": {
+    "title": "Kasaysayan",
+    "currentStreak": "Kasalukuyang Streak",
+    "totalRosaries": "Kabuuang Rosaryo",
+    "longestStreak": "Pinakamahabang Streak",
+    "prayerCalendar": "Kalendaryo ng Panalangin",
+    "recentSessions": "Kamakailang mga Sesyon",
+    "noHistory": "Wala pang panalangin. Simulan ang iyong unang rosaryo!",
+    "historyComingSoon": "Lalabas dito ang iyong kasaysayan ng panalangin"
+  },
+  "offline": {
+    "banner": "Ikaw ay offline",
+    "prayingOffline": "Nagdarasal offline",
+    "pendingSync": "{{count}} panalangin na naghihintay ma-sync"
+  },
+  "common": {
+    "loading": "Naglo-load...",
+    "error": "May nangyaring mali",
+    "retry": "Subukan muli",
+    "cancel": "Kanselahin",
+    "confirm": "Kumpirmahin",
+    "ok": "OK"
+  }
+}

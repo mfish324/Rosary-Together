@@ -1,0 +1,46 @@
+{
+  "name": "Glorious Mysteries",
+  "type": "glorious",
+  "mysteries": [
+    {
+      "number": 1,
+      "title": "The Resurrection",
+      "scripture": "But at daybreak on the first day of the week they took the spices they had prepared and went to the tomb. They found the stone rolled away from the tomb; but when they entered, they did not find the body of the Lord Jesus. While they were puzzling over this, behold, two men in dazzling garments appeared to them. They said to them, 'Why do you seek the living one among the dead? He is not here, but he has been raised.'",
+      "reference": "Luke 24:1-6",
+      "fruit": "Faith",
+      "imageKey": "resurrection"
+    },
+    {
+      "number": 2,
+      "title": "The Ascension",
+      "scripture": "Then he led them out as far as Bethany, raised his hands, and blessed them. As he blessed them he parted from them and was taken up to heaven. They did him homage and then returned to Jerusalem with great joy.",
+      "reference": "Luke 24:50-52",
+      "fruit": "Hope, Desire for Heaven",
+      "imageKey": "ascension"
+    },
+    {
+      "number": 3,
+      "title": "The Descent of the Holy Spirit",
+      "scripture": "When the time for Pentecost was fulfilled, they were all in one place together. And suddenly there came from the sky a noise like a strong driving wind, and it filled the entire house in which they were. Then there appeared to them tongues as of fire, which parted and came to rest on each one of them. And they were all filled with the Holy Spirit.",
+      "reference": "Acts 2:1-4",
+      "fruit": "Love of God, Holy Wisdom",
+      "imageKey": "pentecost"
+    },
+    {
+      "number": 4,
+      "title": "The Assumption",
+      "scripture": "A great sign appeared in the sky, a woman clothed with the sun, with the moon under her feet, and on her head a crown of twelve stars. Mary said: 'My soul proclaims the greatness of the Lord; my spirit rejoices in God my savior. For he has looked upon his handmaid's lowliness; behold, from now on will all ages call me blessed.'",
+      "reference": "Revelation 12:1, Luke 1:46-48",
+      "fruit": "Grace of a Happy Death",
+      "imageKey": "assumption"
+    },
+    {
+      "number": 5,
+      "title": "The Coronation of Mary",
+      "scripture": "A great sign appeared in the sky, a woman clothed with the sun, with the moon under her feet, and on her head a crown of twelve stars. The Almighty has done great things for me, and holy is his name.",
+      "reference": "Revelation 12:1, Luke 1:49",
+      "fruit": "Devotion to Mary, Trust in Her Intercession",
+      "imageKey": "coronation"
+    }
+  ]
+}
