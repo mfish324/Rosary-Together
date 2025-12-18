@@ -130,11 +130,7 @@ async function createUserDocument(
   const userDoc = await getDoc(userRef);
 
   if (!userDoc.exists()) {
-    const newUser: Omit<AppUser, 'id' | 'createdAt' | 'lastPrayedAt'> & {
-      createdAt: ReturnType<typeof serverTimestamp>;
-      isAnonymous: boolean;
-    } = {
-      displayName: data.displayName,
+    const newUser: Record<string, unknown> = {
       country: 'US', // Default, will be updated by user
       preferredLanguage: 'en' as Language,
       totalRosaries: 0,
@@ -148,6 +144,11 @@ async function createUserDocument(
       createdAt: serverTimestamp(),
       isAnonymous: data.isAnonymous,
     };
+
+    // Only add displayName if it's defined
+    if (data.displayName !== undefined) {
+      newUser.displayName = data.displayName;
+    }
 
     await setDoc(userRef, newUser);
   }
