@@ -6,7 +6,6 @@ import {
   ScrollView,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import { COLORS, SPACING, FONTS } from '../../constants';
 import { useAuth } from '../../contexts/AuthContext';
@@ -47,7 +46,7 @@ export default function HistoryScreen() {
         <View style={styles.calendarSection}>
           <Text style={styles.sectionTitle}>Prayer Calendar</Text>
           <View style={styles.calendarPlaceholder}>
-            <Ionicons name="calendar" size={48} color={COLORS.textMuted} />
+            <Text style={styles.placeholderEmoji}>📅</Text>
             <Text style={styles.placeholderText}>
               Your prayer history will appear here
             </Text>
@@ -59,7 +58,7 @@ export default function HistoryScreen() {
           <Text style={styles.sectionTitle}>Recent Sessions</Text>
           {totalRosaries === 0 ? (
             <View style={styles.emptyState}>
-              <Ionicons name="heart-outline" size={48} color={COLORS.textMuted} />
+              <Text style={styles.emptyEmoji}>❤️</Text>
               <Text style={styles.emptyStateText}>
                 No prayers yet. Start your first rosary!
               </Text>
@@ -158,5 +157,11 @@ const styles = StyleSheet.create({
     fontSize: FONTS.sizes.sm,
     color: COLORS.textMuted,
     textAlign: 'center',
+  },
+  placeholderEmoji: {
+    fontSize: 48,
+  },
+  emptyEmoji: {
+    fontSize: 48,
   },
 });

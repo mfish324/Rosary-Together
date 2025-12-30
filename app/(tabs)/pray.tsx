@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import {
   View,
   Text,
@@ -7,16 +7,20 @@ import {
   ScrollView,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Ionicons } from '@expo/vector-icons';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { COLORS, SPACING, FONTS, MYSTERIES_BY_DAY, HAIL_MARYS_PER_DECADE } from '../../constants';
-import { Language, Mystery, MysteryType, PrayerStep } from '../../types';
+import { Language, Mystery, MysteryType, PrayerStep, AudioParticipant, ReportReason } from '../../types';
 import BeadCounter from '../../components/prayer/BeadCounter';
 import MysteryCard from '../../components/prayer/MysteryCard';
 import PrayerProgress from '../../components/prayer/PrayerProgress';
+import AudioControls from '../../components/audio/AudioControls';
+import ParticipantAudio from '../../components/audio/ParticipantAudio';
+import ReportModal from '../../components/audio/ReportModal';
 import { getPrayers } from '../../content/prayers';
 import { getMysteries } from '../../content/mysteries';
+import { useAudio } from '../../hooks/useAudio';
+import { useAuth } from '../../contexts/AuthContext';
 
 // Full rosary prayer sequence
 function generatePrayerSequence(mysteries: Mystery[]): PrayerStep[] {
@@ -68,10 +72,35 @@ function generatePrayerSequence(mysteries: Mystery[]): PrayerStep[] {
 export default function PrayScreen() {
   const { t } = useTranslation();
   const router = useRouter();
-  const params = useLocalSearchParams<{ mode: string; language: string }>();
+  const params = useLocalSearchParams<{ mode: string; language: string; sessionId?: string; roomId?: string }>();
+  const { firebaseUser } = useAuth();
 
   const language = (params.language as Language) || 'en';
-  const mode = params.mode || 'offline';
+  const mode = params.mode || 'offline'; // 'offline', 'queue', or 'room'
+
+  // Create a stable sessionId based on language and date (so all users in same language join same room)
+  const sessionId = useMemo(() => {
+    if (params.sessionId) return params.sessionId;
+    if (mode === 'room' && params.roomId) return params.roomId;
+    const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
+    return `rosary-${language}-${today}`;
+  }, [params.sessionId, params.roomId, mode, language]);
+
+  // Audio context
+  const {
+    isConnected,
+    isConnecting,
+    connectionError,
+    isMicEnabled,
+    toggleMic,
+    participants,
+    muteParticipant,
+    unmuteParticipant,
+    blockParticipant,
+    reportParticipant,
+    joinRoom,
+    leaveRoom,
+  } = useAudio();
 
   // Get today's mysteries
   const today = new Date();
@@ -81,8 +110,14 @@ export default function PrayScreen() {
   const [mysteriesData, setMysteriesData] = useState<Mystery[]>([]);
   const [prayerSequence, setPrayerSequence] = useState<PrayerStep[]>([]);
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
-  const [participantCount, setParticipantCount] = useState(mode === 'queue' ? 3 : 1);
   const [isComplete, setIsComplete] = useState(false);
+
+  // Report modal state
+  const [reportModalVisible, setReportModalVisible] = useState(false);
+  const [selectedParticipant, setSelectedParticipant] = useState<AudioParticipant | null>(null);
+
+  // Calculate participant count (self + others)
+  const participantCount = (mode === 'queue' || mode === 'room') ? participants.length + 1 : 1;
 
   // Load prayers and mysteries
   useEffect(() => {
@@ -97,6 +132,40 @@ export default function PrayScreen() {
 
     loadContent();
   }, [language, mysteryType]);
+
+  // Join/leave audio room for queue mode
+  useEffect(() => {
+    if ((mode === 'queue' || mode === 'room') && sessionId) {
+      joinRoom(sessionId);
+    }
+
+    return () => {
+      if (mode === 'queue' || mode === 'room') {
+        leaveRoom();
+      }
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [mode, sessionId]); // joinRoom/leaveRoom are stable callbacks
+
+  // Report modal handlers
+  const handleOpenReportModal = useCallback((participant: AudioParticipant) => {
+    setSelectedParticipant(participant);
+    setReportModalVisible(true);
+  }, []);
+
+  const handleCloseReportModal = useCallback(() => {
+    setReportModalVisible(false);
+    setSelectedParticipant(null);
+  }, []);
+
+  const handleSubmitReport = useCallback(
+    async (reason: ReportReason, details?: string, alsoBlock?: boolean) => {
+      if (!selectedParticipant) return;
+      await reportParticipant(selectedParticipant.userId, reason, details, alsoBlock);
+      handleCloseReportModal();
+    },
+    [selectedParticipant, reportParticipant]
+  );
 
   const currentStep = prayerSequence[currentStepIndex];
 
@@ -285,43 +354,85 @@ export default function PrayScreen() {
           currentDecade={currentDecade}
         />
 
-        {/* Participant Count */}
-        {mode === 'queue' && (
-          <View style={styles.participantRow}>
-            <Ionicons name="people" size={16} color={COLORS.gold} />
-            <Text style={styles.participantText}>
-              {participantCount} praying with you
-            </Text>
+        {/* Participant List for Queue Mode */}
+        {(mode === 'queue' || mode === 'room') && (
+          <View style={styles.participantsSection}>
+            <View style={styles.participantHeader}>
+              <Text style={styles.participantHeaderEmoji}>👥</Text>
+              <Text style={styles.participantHeaderText}>
+                Praying together ({participantCount})
+              </Text>
+            </View>
+            {/* Current user */}
+            <View style={styles.currentUserRow}>
+              <Text style={styles.currentUserFlag}>
+                {firebaseUser ? '🙏' : '👤'}
+              </Text>
+              <Text style={styles.currentUserName}>You</Text>
+              <View style={styles.micIndicator}>
+                <Text style={styles.micEmoji}>{isMicEnabled ? '🎙️' : '🔇'}</Text>
+              </View>
+            </View>
+
+            {/* Other participants */}
+            {participants.map((participant) => (
+              <ParticipantAudio
+                key={participant.userId}
+                participant={participant}
+                isCurrentUser={false}
+                onMute={() => muteParticipant(participant.userId)}
+                onUnmute={() => unmuteParticipant(participant.userId)}
+                onReport={() => handleOpenReportModal(participant)}
+              />
+            ))}
           </View>
         )}
       </ScrollView>
 
-      {/* Navigation Buttons */}
-      <View style={styles.navigationRow}>
-        <TouchableOpacity
-          style={[styles.navButton, currentStepIndex === 0 && styles.navButtonDisabled]}
-          onPress={handlePreviousPrayer}
-          disabled={currentStepIndex === 0}
-        >
-          <Ionicons
-            name="chevron-back"
-            size={24}
-            color={currentStepIndex === 0 ? COLORS.textMuted : COLORS.text}
+      {/* Bottom Controls */}
+      <View style={styles.bottomControls}>
+        {/* Audio Controls for Queue Mode */}
+        {(mode === 'queue' || mode === 'room') && (
+          <AudioControls
+            isMicEnabled={isMicEnabled}
+            isConnected={isConnected}
+            isConnecting={isConnecting}
+            participantCount={participantCount}
+            onMicToggle={toggleMic}
           />
-        </TouchableOpacity>
+        )}
 
-        <TouchableOpacity
-          style={styles.nextButton}
-          onPress={handleNextPrayer}
-        >
-          <Text style={styles.nextButtonText}>
-            {currentStepIndex === prayerSequence.length - 1 ? 'Finish' : 'Next Prayer'}
-          </Text>
-          <Ionicons name="checkmark" size={20} color={COLORS.text} />
-        </TouchableOpacity>
+        {/* Navigation Buttons */}
+        <View style={styles.navigationRow}>
+          <TouchableOpacity
+            style={[styles.navButton, currentStepIndex === 0 && styles.navButtonDisabled]}
+            onPress={handlePreviousPrayer}
+            disabled={currentStepIndex === 0}
+          >
+            <Text style={[styles.navEmoji, currentStepIndex === 0 && styles.navEmojiDisabled]}>◀️</Text>
+          </TouchableOpacity>
 
-        <View style={styles.navButtonPlaceholder} />
+          <TouchableOpacity
+            style={styles.nextButton}
+            onPress={handleNextPrayer}
+          >
+            <Text style={styles.nextButtonText}>
+              {currentStepIndex === prayerSequence.length - 1 ? 'Finish' : 'Next Prayer'}
+            </Text>
+            <Text style={styles.nextEmoji}>✓</Text>
+          </TouchableOpacity>
+
+          <View style={styles.navButtonPlaceholder} />
+        </View>
       </View>
+
+      {/* Report Modal */}
+      <ReportModal
+        visible={reportModalVisible}
+        participant={selectedParticipant}
+        onSubmit={handleSubmitReport}
+        onCancel={handleCloseReportModal}
+      />
     </SafeAreaView>
   );
 }
@@ -342,7 +453,7 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     padding: SPACING.lg,
-    paddingBottom: 100,
+    paddingBottom: 160, // Extra padding for AudioControls + navigation
   },
   prayerSection: {
     backgroundColor: COLORS.surface,
@@ -384,29 +495,83 @@ const styles = StyleSheet.create({
     color: COLORS.gold,
     fontWeight: FONTS.weights.medium,
   },
-  participantRow: {
+  participantsSection: {
+    marginTop: SPACING.lg,
+    backgroundColor: COLORS.backgroundLight,
+    borderRadius: 16,
+    padding: SPACING.md,
+  },
+  participantHeader: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
     gap: SPACING.xs,
-    marginTop: SPACING.md,
+    marginBottom: SPACING.md,
+    paddingBottom: SPACING.sm,
+    borderBottomWidth: 1,
+    borderBottomColor: COLORS.surface,
   },
-  participantText: {
+  participantHeaderEmoji: {
+    fontSize: 16,
+  },
+  participantHeaderText: {
     fontSize: FONTS.sizes.sm,
-    color: COLORS.textSecondary,
+    fontWeight: FONTS.weights.medium,
+    color: COLORS.gold,
   },
-  navigationRow: {
+  micEmoji: {
+    fontSize: 14,
+  },
+  navEmoji: {
+    fontSize: 20,
+  },
+  navEmojiDisabled: {
+    opacity: 0.5,
+  },
+  nextEmoji: {
+    fontSize: 18,
+    color: COLORS.text,
+  },
+  debugText: {
+    fontSize: FONTS.sizes.xs,
+    color: COLORS.textMuted,
+    marginBottom: SPACING.sm,
+  },
+  currentUserRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: SPACING.sm,
+    paddingHorizontal: SPACING.md,
+    backgroundColor: COLORS.surface,
+    borderRadius: 8,
+    marginBottom: SPACING.xs,
+    gap: SPACING.sm,
+  },
+  currentUserFlag: {
+    fontSize: 20,
+  },
+  currentUserName: {
+    flex: 1,
+    fontSize: FONTS.sizes.md,
+    color: COLORS.text,
+    fontWeight: FONTS.weights.medium,
+  },
+  micIndicator: {
+    padding: SPACING.xs,
+  },
+  bottomControls: {
     position: 'absolute',
     bottom: 0,
     left: 0,
     right: 0,
+    backgroundColor: COLORS.backgroundLight,
+    borderTopWidth: 1,
+    borderTopColor: COLORS.surface,
+  },
+  navigationRow: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     padding: SPACING.lg,
-    backgroundColor: COLORS.backgroundLight,
-    borderTopWidth: 1,
-    borderTopColor: COLORS.surface,
   },
   navButton: {
     width: 44,

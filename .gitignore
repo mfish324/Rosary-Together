@@ -40,3 +40,5 @@ yarn-error.*
 /ios
 /android
 .env
+firebase/functions/.env
+firebase/functions/lib/

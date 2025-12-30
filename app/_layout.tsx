@@ -6,6 +6,8 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { AuthProvider, useAuth } from '../contexts/AuthContext';
 import { PresenceProvider } from '../contexts/PresenceContext';
 import { PrayerProvider } from '../contexts/PrayerContext';
+import { AudioProvider } from '../contexts/AudioContext';
+import { UserProvider } from '../contexts/UserContext';
 import { COLORS } from '../constants';
 import '../i18n';
 
@@ -29,26 +31,28 @@ function RootLayoutContent() {
 
   return (
     <PresenceProvider>
-      <PrayerProvider>
-        <StatusBar style="light" />
-        <Stack
-          screenOptions={{
-            headerStyle: {
-              backgroundColor: COLORS.background,
-            },
-            headerTintColor: COLORS.text,
-            headerTitleStyle: {
-              fontWeight: '600',
-            },
-            contentStyle: {
-              backgroundColor: COLORS.background,
-            },
-          }}
-        >
-          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-          <Stack.Screen name="+not-found" options={{ title: 'Not Found' }} />
-        </Stack>
-      </PrayerProvider>
+      <AudioProvider>
+        <PrayerProvider>
+          <StatusBar style="light" />
+          <Stack
+            screenOptions={{
+              headerStyle: {
+                backgroundColor: COLORS.background,
+              },
+              headerTintColor: COLORS.text,
+              headerTitleStyle: {
+                fontWeight: '600',
+              },
+              contentStyle: {
+                backgroundColor: COLORS.background,
+              },
+            }}
+          >
+            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+            <Stack.Screen name="+not-found" options={{ title: 'Not Found' }} />
+          </Stack>
+        </PrayerProvider>
+      </AudioProvider>
     </PresenceProvider>
   );
 }
@@ -57,7 +61,9 @@ export default function RootLayout() {
   return (
     <SafeAreaProvider>
       <AuthProvider>
-        <RootLayoutContent />
+        <UserProvider>
+          <RootLayoutContent />
+        </UserProvider>
       </AuthProvider>
     </SafeAreaProvider>
   );

@@ -1,6 +1,5 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
 import { COLORS, SPACING, FONTS, RADIUS } from '../../constants';
 import { Mystery, MysteryType } from '../../types';
 
@@ -17,11 +16,11 @@ const MYSTERY_TYPE_LABELS: Record<MysteryType, string> = {
   luminous: 'Luminous',
 };
 
-const MYSTERY_ICONS: Record<MysteryType, keyof typeof Ionicons.glyphMap> = {
-  joyful: 'happy',
-  sorrowful: 'heart-dislike',
-  glorious: 'sunny',
-  luminous: 'flash',
+const MYSTERY_EMOJI: Record<MysteryType, string> = {
+  joyful: '😊',
+  sorrowful: '💔',
+  glorious: '☀️',
+  luminous: '✨',
 };
 
 export default function MysteryCard({
@@ -30,13 +29,13 @@ export default function MysteryCard({
   mysteryType,
 }: MysteryCardProps) {
   const typeLabel = MYSTERY_TYPE_LABELS[mysteryType];
-  const icon = MYSTERY_ICONS[mysteryType];
+  const emoji = MYSTERY_EMOJI[mysteryType];
 
   return (
     <View style={styles.container}>
       <View style={styles.header}>
         <View style={styles.iconContainer}>
-          <Ionicons name={icon} size={32} color={COLORS.gold} />
+          <Text style={styles.mysteryEmoji}>{emoji}</Text>
         </View>
         <View style={styles.headerText}>
           <Text style={styles.mysteryNumber}>
@@ -92,5 +91,8 @@ const styles = StyleSheet.create({
     fontWeight: FONTS.weights.bold,
     color: COLORS.text,
     marginTop: SPACING.xs,
+  },
+  mysteryEmoji: {
+    fontSize: 28,
   },
 });

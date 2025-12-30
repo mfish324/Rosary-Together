@@ -149,3 +149,113 @@ export interface PresenceData {
   sessionId: string | null;
   lastSeen: number;
 }
+
+// Audio & Moderation Types
+
+export interface AudioParticipant {
+  userId: string;
+  displayName?: string;
+  country: string;
+  isSpeaking: boolean;      // voice activity detected
+  isMicEnabled: boolean;    // their mic is on/off
+  isMutedByMe: boolean;     // I've muted them locally
+  isBlocked: boolean;       // I've blocked this user
+}
+
+export type ReportReason =
+  | 'inappropriate_audio'
+  | 'harassment'
+  | 'disruptive_behavior'
+  | 'spam'
+  | 'other';
+
+export interface Report {
+  id: string;
+  reporterId: string;
+  reportedUserId: string;
+  sessionId: string;
+  reason: ReportReason;
+  details?: string;
+  createdAt: Date;
+  status: 'pending' | 'reviewed' | 'actioned' | 'dismissed';
+}
+
+export interface BlockedUser {
+  userId: string;
+  blockedAt: Date;
+}
+
+export interface UserSuspension {
+  suspended: boolean;
+  suspendedAt?: Date;
+  suspensionReason?: 'auto_multiple_reports' | 'manual_review';
+}
+
+export type AudioConnectionState = 'disconnected' | 'connecting' | 'connected' | 'error';
+
+export interface AudioRoomState {
+  sessionId: string | null;
+  connectionState: AudioConnectionState;
+  error: string | null;
+  participants: AudioParticipant[];
+  isMicEnabled: boolean;
+}
+
+// Prayer Room types
+export type RoomType = 'public' | 'private';
+
+export interface Room {
+  id: string;
+  name: string;
+  language: Language;
+  type: RoomType;
+  groupId?: string; // Only for private rooms
+  createdBy: string; // userId
+  createdAt: Date;
+  isActive: boolean; // Room is currently in session
+  currentSessionId?: string;
+  participantCount: number;
+  maxParticipants?: number; // Optional limit for private rooms
+}
+
+export interface RoomParticipant {
+  userId: string;
+  joinedAt: number;
+  isSpeaking: boolean;
+  isMicEnabled: boolean;
+}
+
+// Prayer Group types
+export type GroupRole = 'owner' | 'admin' | 'member';
+
+export interface PrayerGroup {
+  id: string;
+  name: string;
+  description?: string;
+  createdBy: string; // userId
+  createdAt: Date;
+  memberCount: number;
+  defaultLanguage: Language;
+  imageUrl?: string;
+}
+
+export interface GroupMember {
+  userId: string;
+  groupId: string;
+  role: GroupRole;
+  displayName?: string;
+  joinedAt: Date;
+}
+
+export interface GroupInvitation {
+  id: string;
+  groupId: string;
+  groupName: string;
+  code: string; // Unique 8-char invite code
+  createdBy: string;
+  createdAt: Date;
+  expiresAt?: Date; // Optional expiry
+  maxUses?: number; // Optional use limit
+  usedCount: number;
+  isActive: boolean;
+}

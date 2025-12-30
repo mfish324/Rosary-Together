@@ -7,7 +7,6 @@ import {
   Modal,
   FlatList,
 } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
 import { COLORS, SPACING, FONTS, RADIUS } from '../../constants';
 import { SUPPORTED_LANGUAGES, Language } from '../../types';
 
@@ -38,7 +37,7 @@ export default function LanguageSelector({
       >
         <Text style={styles.flag}>{selectedConfig.flag}</Text>
         <Text style={styles.languageName}>{selectedConfig.nativeName}</Text>
-        <Ionicons name="chevron-down" size={20} color={COLORS.textSecondary} />
+        <Text style={styles.chevronEmoji}>▼</Text>
       </TouchableOpacity>
 
       <Modal
@@ -71,7 +70,7 @@ export default function LanguageSelector({
                     <Text style={styles.optionName}>{config.name}</Text>
                   </View>
                   {code === selectedLanguage && (
-                    <Ionicons name="checkmark" size={20} color={COLORS.gold} />
+                    <Text style={styles.checkEmoji}>✓</Text>
                   )}
                 </TouchableOpacity>
               )}
@@ -148,5 +147,13 @@ const styles = StyleSheet.create({
   optionName: {
     fontSize: FONTS.sizes.sm,
     color: COLORS.textSecondary,
+  },
+  chevronEmoji: {
+    fontSize: 14,
+    color: COLORS.textSecondary,
+  },
+  checkEmoji: {
+    fontSize: 18,
+    color: COLORS.gold,
   },
 });

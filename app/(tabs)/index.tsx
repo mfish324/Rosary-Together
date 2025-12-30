@@ -7,25 +7,28 @@ import {
   ScrollView,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { COLORS, SPACING, FONTS, MYSTERIES_BY_DAY, MYSTERY_NAMES, DAY_NAMES } from '../../constants';
 import { SUPPORTED_LANGUAGES, Language } from '../../types';
 import { useAuth } from '../../contexts/AuthContext';
+import { useUser } from '../../contexts/UserContext';
 import LanguageSelector from '../../components/ui/LanguageSelector';
 import QueueCountByLanguage from '../../components/queue/QueueCountByLanguage';
+import NameEntryModal from '../../components/ui/NameEntryModal';
 
 export default function HomeScreen() {
   const { t } = useTranslation();
   const router = useRouter();
   const { user } = useAuth();
+  const { profile, setProfile, isLoading: isUserLoading } = useUser();
 
   const [selectedLanguage, setSelectedLanguage] = useState<Language>(
     user?.preferredLanguage || 'en'
   );
   const [prayingCount, setPrayingCount] = useState(0);
   const [isReady, setIsReady] = useState(false);
+  const [showNameModal, setShowNameModal] = useState(false);
 
   // Get today's mysteries
   const today = new Date();
@@ -35,12 +38,34 @@ export default function HomeScreen() {
   const dayName = DAY_NAMES[dayOfWeek];
 
   const handleReadyToPray = () => {
+    // If no profile, show name entry modal first
+    if (!profile) {
+      setShowNameModal(true);
+      return;
+    }
+
+    navigateToPray();
+  };
+
+  const navigateToPray = () => {
     setIsReady(true);
-    // Navigate to pray screen with queue mode
     router.push({
       pathname: '/pray',
       params: { mode: 'queue', language: selectedLanguage },
     });
+  };
+
+  const handleNameSubmit = async (name: string, email?: string) => {
+    await setProfile({ displayName: name, email });
+    setShowNameModal(false);
+    navigateToPray();
+  };
+
+  const handleSkipName = async () => {
+    // Use "Anonymous" if they skip
+    await setProfile({ displayName: 'Anonymous' });
+    setShowNameModal(false);
+    navigateToPray();
   };
 
   const handlePrayOffline = () => {
@@ -55,14 +80,14 @@ export default function HomeScreen() {
       <ScrollView contentContainerStyle={styles.scrollContent}>
         {/* Header */}
         <View style={styles.header}>
-          <Ionicons name="globe-outline" size={32} color={COLORS.gold} />
+          <Text style={styles.headerEmoji}>🌍</Text>
           <Text style={styles.title}>Rosary Together</Text>
           <Text style={styles.tagline}>{t('home.tagline', 'Never pray alone again')}</Text>
         </View>
 
         {/* Praying Now Counter */}
         <View style={styles.counterCard}>
-          <Ionicons name="people" size={24} color={COLORS.gold} />
+          <Text style={styles.counterEmoji}>👥</Text>
           <Text style={styles.counterText}>
             {t('home.prayingNow', { count: prayingCount, defaultValue: `${prayingCount} praying now` })}
           </Text>
@@ -93,7 +118,7 @@ export default function HomeScreen() {
 
         {/* Today's Mysteries */}
         <View style={styles.mysteryInfo}>
-          <Ionicons name="sunny" size={20} color={COLORS.gold} />
+          <Text style={styles.mysteryEmoji}>☀️</Text>
           <Text style={styles.mysteryText}>
             {t('home.todaysMysteries', {
               mysteries: mysteryName,
@@ -115,12 +140,42 @@ export default function HomeScreen() {
           onPress={handlePrayOffline}
           activeOpacity={0.7}
         >
-          <Ionicons name="cloud-offline" size={20} color={COLORS.textSecondary} />
+          <Text style={styles.offlineEmoji}>📴</Text>
           <Text style={styles.offlineButtonText}>
             {t('home.prayOffline', 'Pray Offline')}
           </Text>
         </TouchableOpacity>
+
+        {/* About Link */}
+        <TouchableOpacity
+          style={styles.aboutButton}
+          onPress={() => router.push('/about')}
+          activeOpacity={0.7}
+        >
+          <Text style={styles.aboutEmoji}>ℹ️</Text>
+          <Text style={styles.aboutButtonText}>About Rosary Together</Text>
+        </TouchableOpacity>
+
+        {/* Show current user */}
+        {profile && (
+          <View style={styles.userInfo}>
+            <Text style={styles.userEmoji}>👤</Text>
+            <Text style={styles.userInfoText}>
+              Praying as {profile.displayName}
+            </Text>
+            <TouchableOpacity onPress={() => setShowNameModal(true)}>
+              <Text style={styles.changeNameText}>Change</Text>
+            </TouchableOpacity>
+          </View>
+        )}
       </ScrollView>
+
+      {/* Name Entry Modal */}
+      <NameEntryModal
+        visible={showNameModal}
+        onSubmit={handleNameSubmit}
+        onCancel={handleSkipName}
+      />
     </SafeAreaView>
   );
 }
@@ -224,8 +279,54 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     marginTop: SPACING.lg,
   },
+  offlineEmoji: {
+    fontSize: 20,
+  },
   offlineButtonText: {
     fontSize: FONTS.sizes.md,
     color: COLORS.textSecondary,
+  },
+  aboutButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: SPACING.sm,
+    paddingVertical: SPACING.md,
+    paddingHorizontal: SPACING.lg,
+    marginTop: SPACING.sm,
+  },
+  aboutEmoji: {
+    fontSize: 20,
+  },
+  aboutButtonText: {
+    fontSize: FONTS.sizes.md,
+    color: COLORS.textSecondary,
+  },
+  userInfo: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: SPACING.sm,
+    marginTop: SPACING.lg,
+    paddingVertical: SPACING.sm,
+  },
+  userEmoji: {
+    fontSize: 16,
+  },
+  userInfoText: {
+    fontSize: FONTS.sizes.sm,
+    color: COLORS.textMuted,
+  },
+  changeNameText: {
+    fontSize: FONTS.sizes.sm,
+    color: COLORS.primary,
+    marginLeft: SPACING.xs,
+  },
+  headerEmoji: {
+    fontSize: 32,
+  },
+  counterEmoji: {
+    fontSize: 24,
+  },
+  mysteryEmoji: {
+    fontSize: 20,
   },
 });

@@ -10,7 +10,7 @@ import {
   Alert,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Ionicons } from '@expo/vector-icons';
+import { useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { COLORS, SPACING, FONTS } from '../../constants';
 import { SUPPORTED_LANGUAGES, Language } from '../../types';
@@ -19,6 +19,7 @@ import LanguageSelector from '../../components/ui/LanguageSelector';
 
 export default function SettingsScreen() {
   const { t } = useTranslation();
+  const router = useRouter();
   const { user, isAnonymous, updateUser, logout, linkToEmail } = useAuth();
 
   const [displayName, setDisplayName] = useState(user?.displayName || '');
@@ -82,7 +83,7 @@ export default function SettingsScreen() {
 
           {isAnonymous && (
             <View style={styles.anonymousBanner}>
-              <Ionicons name="warning" size={20} color={COLORS.warning} />
+              <Text style={styles.warningEmoji}>⚠️</Text>
               <Text style={styles.anonymousBannerText}>
                 You're using a guest account. Create an account to save your progress.
               </Text>
@@ -156,28 +157,28 @@ export default function SettingsScreen() {
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>About</Text>
 
-          <TouchableOpacity style={styles.linkRow}>
-            <Ionicons name="information-circle" size={24} color={COLORS.textSecondary} />
+          <TouchableOpacity style={styles.linkRow} onPress={() => router.push('/about')}>
+            <Text style={styles.linkEmoji}>ℹ️</Text>
             <Text style={styles.linkText}>About Rosary Together</Text>
-            <Ionicons name="chevron-forward" size={20} color={COLORS.textMuted} />
+            <Text style={styles.chevronEmoji}>›</Text>
           </TouchableOpacity>
 
           <TouchableOpacity style={styles.linkRow}>
-            <Ionicons name="heart" size={24} color={COLORS.textSecondary} />
+            <Text style={styles.linkEmoji}>❤️</Text>
             <Text style={styles.linkText}>Support the App</Text>
-            <Ionicons name="chevron-forward" size={20} color={COLORS.textMuted} />
+            <Text style={styles.chevronEmoji}>›</Text>
           </TouchableOpacity>
 
           <TouchableOpacity style={styles.linkRow}>
-            <Ionicons name="document-text" size={24} color={COLORS.textSecondary} />
+            <Text style={styles.linkEmoji}>📄</Text>
             <Text style={styles.linkText}>Privacy Policy</Text>
-            <Ionicons name="chevron-forward" size={20} color={COLORS.textMuted} />
+            <Text style={styles.chevronEmoji}>›</Text>
           </TouchableOpacity>
         </View>
 
         {/* Sign Out */}
         <TouchableOpacity style={styles.signOutButton} onPress={handleSignOut}>
-          <Ionicons name="log-out" size={20} color={COLORS.error} />
+          <Text style={styles.signOutEmoji}>🚪</Text>
           <Text style={styles.signOutText}>Sign Out</Text>
         </TouchableOpacity>
 
@@ -301,5 +302,18 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: FONTS.sizes.sm,
     color: COLORS.textMuted,
+  },
+  warningEmoji: {
+    fontSize: 18,
+  },
+  linkEmoji: {
+    fontSize: 22,
+  },
+  chevronEmoji: {
+    fontSize: 20,
+    color: COLORS.textMuted,
+  },
+  signOutEmoji: {
+    fontSize: 18,
   },
 });

@@ -10,6 +10,11 @@ import {
   Database,
   connectDatabaseEmulator,
 } from 'firebase/database';
+import {
+  getFunctions,
+  Functions,
+  connectFunctionsEmulator,
+} from 'firebase/functions';
 import Constants from 'expo-constants';
 
 // Firebase configuration from environment variables
@@ -28,6 +33,7 @@ let app: FirebaseApp;
 let auth: Auth;
 let db: Firestore;
 let rtdb: Database;
+let functions: Functions;
 
 function initializeFirebase() {
   if (getApps().length === 0) {
@@ -39,6 +45,7 @@ function initializeFirebase() {
   auth = getAuth(app);
   db = getFirestore(app);
   rtdb = getDatabase(app);
+  functions = getFunctions(app);
 
   // Connect to emulators in development
   if (__DEV__ && process.env.EXPO_PUBLIC_USE_EMULATORS === 'true') {
@@ -46,17 +53,18 @@ function initializeFirebase() {
       connectAuthEmulator(auth, 'http://localhost:9099', { disableWarnings: true });
       connectFirestoreEmulator(db, 'localhost', 8080);
       connectDatabaseEmulator(rtdb, 'localhost', 9000);
+      connectFunctionsEmulator(functions, 'localhost', 5001);
       console.log('Connected to Firebase emulators');
     } catch (error) {
       // Emulators already connected
     }
   }
 
-  return { app, auth, db, rtdb };
+  return { app, auth, db, rtdb, functions };
 }
 
 // Initialize on module load
 const firebase = initializeFirebase();
 
-export { firebase, auth, db, rtdb };
+export { firebase, auth, db, rtdb, functions };
 export default firebase;

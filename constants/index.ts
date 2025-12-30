@@ -133,13 +133,38 @@ export const STORAGE_KEYS = {
 
 // Firebase collection names
 export const COLLECTIONS = {
+  // Core collections
   USERS: 'users',
   SESSIONS: 'sessions',
   INTENTIONS: 'intentions',
+  // Room and group collections
+  ROOMS: 'rooms',
+  GROUPS: 'groups',
+  GROUP_MEMBERS: 'members', // subcollection under groups
+  GROUP_INVITATIONS: 'invitations',
 };
 
 // Firebase Realtime Database paths
 export const RTDB_PATHS = {
   PRESENCE: 'presence',
   QUEUE: 'queue',
+  ROOMS: 'rooms', // For real-time room participant tracking
+};
+
+// Audio & Moderation
+export const REPORTS_FOR_AUTO_SUSPEND = 3; // Unique reporters needed for auto-suspension
+export const REPORT_WINDOW_DAYS = 7; // Reports within this window count toward suspension
+export const VOICE_ACTIVITY_THRESHOLD_DB = -50; // For speaking indicator detection
+
+// Invitation settings
+export const INVITE_CODE_LENGTH = 8;
+export const DEFAULT_INVITE_EXPIRY_DAYS = 7;
+
+// Room settings
+export const MAX_ROOM_PARTICIPANTS = 50; // Max users per room
+export const PUBLIC_ROOM_IDS: Record<string, string> = {
+  en: 'public-en',
+  es: 'public-es',
+  pt: 'public-pt',
+  tl: 'public-tl',
 };
