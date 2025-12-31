@@ -7,6 +7,7 @@ import React, {
   useRef,
   ReactNode,
 } from 'react';
+import { AppState, AppStateStatus, Platform } from 'react-native';
 import {
   joinAudioRoom,
   leaveAudioRoom,
@@ -37,7 +38,7 @@ interface AudioContextType {
 
   // Local audio
   isMicEnabled: boolean;
-  toggleMic: () => void;
+  toggleMic: () => Promise<void>;
 
   // Participants
   participants: AudioParticipant[];
@@ -83,6 +84,8 @@ export function AudioProvider({ children }: AudioProviderProps) {
 
   const unsubscribeParticipantsRef = useRef<(() => void) | null>(null);
   const unsubscribeConnectionRef = useRef<(() => void) | null>(null);
+  const appStateRef = useRef<AppStateStatus>(AppState.currentState);
+  const micWasEnabledBeforeBackground = useRef<boolean>(false);
 
   // Subscribe to connection state changes
   useEffect(() => {
@@ -124,6 +127,47 @@ export function AudioProvider({ children }: AudioProviderProps) {
     };
   }, []);
 
+  // Handle app state changes (background/foreground) for mic restoration
+  useEffect(() => {
+    const handleAppStateChange = async (nextAppState: AppStateStatus) => {
+      // App going to background - save mic state
+      if (
+        appStateRef.current === 'active' &&
+        (nextAppState === 'inactive' || nextAppState === 'background')
+      ) {
+        micWasEnabledBeforeBackground.current = isMicEnabled;
+      }
+
+      // App coming to foreground - restore mic if it was enabled
+      if (
+        (appStateRef.current === 'inactive' || appStateRef.current === 'background') &&
+        nextAppState === 'active'
+      ) {
+        if (micWasEnabledBeforeBackground.current && currentSessionId) {
+          // Re-enable the microphone after a short delay to ensure audio context is ready
+          setTimeout(async () => {
+            try {
+              await toggleMicrophone(true);
+              setIsMicEnabled(true);
+            } catch (error) {
+              console.error('Failed to restore microphone:', error);
+              // If restoration fails, update UI to reflect actual state
+              setIsMicEnabled(false);
+            }
+          }, 500);
+        }
+      }
+
+      appStateRef.current = nextAppState;
+    };
+
+    const subscription = AppState.addEventListener('change', handleAppStateChange);
+
+    return () => {
+      subscription.remove();
+    };
+  }, [isMicEnabled, currentSessionId]);
+
   const joinRoom = useCallback(
     async (sessionId: string) => {
       if (!firebaseUser) {
@@ -157,10 +201,15 @@ export function AudioProvider({ children }: AudioProviderProps) {
     }
   }, []);
 
-  const toggleMic = useCallback(() => {
+  const toggleMic = useCallback(async () => {
     const newState = !isMicEnabled;
-    toggleMicrophone(newState);
-    setIsMicEnabled(newState);
+    try {
+      await toggleMicrophone(newState);
+      setIsMicEnabled(newState);
+    } catch (error) {
+      console.error('Failed to toggle microphone:', error);
+      // Keep the current state if toggle fails
+    }
   }, [isMicEnabled]);
 
   const muteParticipant = useCallback(async (userId: string) => {

@@ -82,7 +82,11 @@ export default function GroupsScreen() {
   const [isJoining, setIsJoining] = useState(false);
 
   const loadGroups = useCallback(async () => {
-    if (!user?.id) return;
+    if (!user?.id) {
+      setIsLoading(false);
+      setRefreshing(false);
+      return;
+    }
 
     try {
       const userGroups = await getUserGroups(user.id);
@@ -143,12 +147,22 @@ export default function GroupsScreen() {
 
       const result = await acceptInvitation(invitation.id, user.id);
 
-      if (result.success) {
+      if (result.success && result.groupId) {
         await loadGroups();
         setShowJoinModal(false);
         setInviteCode('');
-        Alert.alert('Success', `You have joined ${invitation.groupName}!`);
-      } else {
+        Alert.alert('Success', `You have joined ${invitation.groupName}!`, [
+          {
+            text: 'View Group',
+            onPress: () => {
+              router.push({
+                pathname: '/group/[id]',
+                params: { id: result.groupId },
+              });
+            },
+          },
+        ]);
+      } else if (!result.success) {
         Alert.alert('Error', result.error || 'Failed to join group.');
       }
     } catch (error) {
