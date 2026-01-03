@@ -15,6 +15,7 @@ import { doc, setDoc, getDoc, updateDoc, serverTimestamp } from 'firebase/firest
 import { auth, db } from './firebase';
 import { User as AppUser, Language } from '../types';
 import { COLLECTIONS } from '../constants';
+import { incrementUserCount } from './stats';
 
 // Sign in anonymously for quick start
 export async function signInAnonymousUser(): Promise<User> {
@@ -151,6 +152,9 @@ async function createUserDocument(
     }
 
     await setDoc(userRef, newUser);
+
+    // Increment global user count for new users
+    await incrementUserCount();
   }
 }
 

@@ -16,6 +16,7 @@ import { useUser } from '../../contexts/UserContext';
 import LanguageSelector from '../../components/ui/LanguageSelector';
 import QueueCountByLanguage from '../../components/queue/QueueCountByLanguage';
 import NameEntryModal from '../../components/ui/NameEntryModal';
+import { subscribeToStats } from '../../services/stats';
 
 export default function HomeScreen() {
   const { t } = useTranslation();
@@ -29,6 +30,7 @@ export default function HomeScreen() {
   const [prayingCount, setPrayingCount] = useState(0);
   const [isReady, setIsReady] = useState(false);
   const [showNameModal, setShowNameModal] = useState(false);
+  const [totalUsers, setTotalUsers] = useState(0);
 
   // Get today's mysteries
   const today = new Date();
@@ -36,6 +38,14 @@ export default function HomeScreen() {
   const todayMysteries = MYSTERIES_BY_DAY[dayOfWeek];
   const mysteryName = MYSTERY_NAMES[todayMysteries];
   const dayName = DAY_NAMES[dayOfWeek];
+
+  // Subscribe to global user count
+  useEffect(() => {
+    const unsubscribe = subscribeToStats((stats) => {
+      setTotalUsers(stats.totalUsers);
+    });
+    return () => unsubscribe();
+  }, []);
 
   const handleReadyToPray = () => {
     // If no profile, show name entry modal first
@@ -166,6 +176,15 @@ export default function HomeScreen() {
             <TouchableOpacity onPress={() => setShowNameModal(true)}>
               <Text style={styles.changeNameText}>Change</Text>
             </TouchableOpacity>
+          </View>
+        )}
+
+        {/* Footer - shown when we have 100+ users */}
+        {totalUsers >= 100 && (
+          <View style={styles.footer}>
+            <Text style={styles.footerText}>
+              Helping over {Math.floor(totalUsers / 10) * 10} people pray together
+            </Text>
           </View>
         )}
       </ScrollView>
@@ -328,5 +347,18 @@ const styles = StyleSheet.create({
   },
   mysteryEmoji: {
     fontSize: 20,
+  },
+  footer: {
+    marginTop: SPACING.xl,
+    paddingTop: SPACING.lg,
+    borderTopWidth: 1,
+    borderTopColor: COLORS.surface,
+    alignItems: 'center',
+    width: '100%',
+  },
+  footerText: {
+    fontSize: FONTS.sizes.sm,
+    color: COLORS.textMuted,
+    fontStyle: 'italic',
   },
 });
