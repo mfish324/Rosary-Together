@@ -315,6 +315,7 @@ export default function PrayScreen() {
             mystery={currentMystery}
             mysteryNumber={currentDecade + 1}
             mysteryType={mysteryType}
+            showLargeImage={true}
           />
         )}
 
