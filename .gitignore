@@ -42,3 +42,4 @@ yarn-error.*
 .env
 firebase/functions/.env
 firebase/functions/lib/
+.firebase/
