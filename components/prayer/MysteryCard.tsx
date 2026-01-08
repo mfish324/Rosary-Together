@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, Image, ActivityIndicator } from 'react-native';
 import { COLORS, SPACING, FONTS, RADIUS } from '../../constants';
-import { getMysteryImageUrl } from '../../constants/mysteryImages';
+import { getMysteryImageUrl, getMysteryPlaceholderUrl } from '../../constants/mysteryImages';
 import { Mystery, MysteryType } from '../../types';
 
 interface MysteryCardProps {
@@ -26,8 +26,12 @@ export default function MysteryCard({
 }: MysteryCardProps) {
   const typeLabel = MYSTERY_TYPE_LABELS[mysteryType];
   const imageUrl = getMysteryImageUrl(mysteryType, mysteryNumber);
+  const placeholderUrl = getMysteryPlaceholderUrl(mysteryType, mysteryNumber);
   const [imageLoading, setImageLoading] = useState(true);
+  const [useFirebaseImage, setUseFirebaseImage] = useState(true);
   const [imageError, setImageError] = useState(false);
+
+  const currentImageUrl = useFirebaseImage ? imageUrl : placeholderUrl;
 
   return (
     <View style={styles.container}>
@@ -41,13 +45,18 @@ export default function MysteryCard({
           )}
           {!imageError ? (
             <Image
-              source={{ uri: imageUrl }}
+              source={{ uri: currentImageUrl }}
               style={[styles.largeImage, imageLoading && styles.hidden]}
               resizeMode="cover"
               onLoad={() => setImageLoading(false)}
               onError={() => {
-                setImageError(true);
-                setImageLoading(false);
+                if (useFirebaseImage) {
+                  setUseFirebaseImage(false);
+                  setImageLoading(true);
+                } else {
+                  setImageError(true);
+                  setImageLoading(false);
+                }
               }}
             />
           ) : (
@@ -64,10 +73,16 @@ export default function MysteryCard({
           <View style={styles.thumbnailContainer}>
             {!imageError ? (
               <Image
-                source={{ uri: imageUrl }}
+                source={{ uri: currentImageUrl }}
                 style={styles.thumbnail}
                 resizeMode="cover"
-                onError={() => setImageError(true)}
+                onError={() => {
+                  if (useFirebaseImage) {
+                    setUseFirebaseImage(false);
+                  } else {
+                    setImageError(true);
+                  }
+                }}
               />
             ) : (
               <Text style={styles.fallbackEmoji}>🙏</Text>
